@@ -1146,8 +1146,8 @@ def extract_pem(pem, private_pem=False):
     pem_footer = '-----END RSA PRIVATE KEY-----'
   
   else:
-    pem_header = '-----BEGIN PUBLIC KEY-----'
-    pem_footer = '-----END PUBLIC KEY-----'
+    pem_header = '-----BEGIN RSA PUBLIC KEY-----'
+    pem_footer = '-----END RSA PUBLIC KEY-----'
   
   header_start = 0
   footer_start = 0

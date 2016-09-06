@@ -102,7 +102,7 @@
 # Help with Python 3 compatibility, where the print statement is a function, an
 # implicit relative import is invalid, and the '/' operator performs true
 # division.  Example:  print 'hello world' raises a 'SyntaxError' exception.
-from __future__ import print_function
+# from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import unicode_literals
@@ -3123,6 +3123,7 @@ class Updater(object):
     target_filepath = target['filepath']
     trusted_length = target['fileinfo']['length']
     trusted_hashes = target['fileinfo']['hashes']
+    trusted_permissions = target['fileinfo'].get('custom',None).get('file_permissions',None)
 
     # '_get_target_file()' checks every mirror and returns the first target
     # that passes verification.
@@ -3154,3 +3155,9 @@ class Updater(object):
         raise
 
     target_file_object.move(destination)
+    # Unix need to set permissions.
+    try:
+      if trusted_permissions:
+        os.system('chmod %s %s'%(trusted_permissions, destination))
+    except Exception, e:
+      pass

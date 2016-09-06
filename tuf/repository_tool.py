@@ -2055,8 +2055,78 @@ class Targets(Metadata):
     
     tuf.roledb.update_roleinfo(self.rolename, roleinfo) 
 
+  def update_targets_auto(self):
+    """
+    <Purpose>
+      auto to add,remove and update target files.
+      according to files in file system in targets folder.
+      also include permissions. So,Only run in Unix.
 
+      >>> 
+      >>>
+      >>>
 
+    <Arguments>
+      None
+
+    <Exceptions>
+      None.
+
+    <Side Effects>
+      None.
+    
+    <Returns>
+      None.
+    """
+    # scan a file list.
+    list_of_targets = Repository.get_filepaths_in_directory(self._targets_directory,
+                                 recursive_walk=True, followlinks=True) 
+    # Does 'list_of_targets' have the correct format?
+    # Ensure the arguments have the appropriate number of objects and object
+    # types, and that all dict keys are properly named.
+    # Raise 'tuf.FormatError' if there is a mismatch.
+    tuf.formats.RELPATHS_SCHEMA.check_match(list_of_targets)
+
+    # Update the tuf.roledb entry.
+    targets_directory_length = len(self._targets_directory) 
+    relative_list_of_targets = []
+    permissions_list_of_targets = []
+   
+    # Ensure the paths in 'list_of_targets' are valid and fall under the
+    # repository's targets directory.  The paths of 'list_of_targets' will be
+    # verified as allowed paths according to this Targets parent role when
+    # write() is called.  Not verifying filepaths here allows the freedom to add
+    # targets and parent restrictions in any order, and minimize the number of
+    # times these checks are performed.
+    for target in list_of_targets:
+      filepath = os.path.abspath(target)
+    
+      if not filepath.startswith(self._targets_directory+os.sep):
+        raise tuf.Error(repr(filepath) + ' is not under the Repository\'s'
+          ' targets directory: ' + repr(self._targets_directory))
+      
+      if os.path.isfile(filepath):
+        relative_list_of_targets.append(filepath[targets_directory_length:])
+        octal_file_permissions = oct(os.stat(filepath).st_mode)[4:]
+        permissions_list_of_targets.append(octal_file_permissions)
+      else:
+        raise tuf.Error(repr(filepath) + ' is not a valid file.')
+
+    # Update this Targets 'tuf.roledb.py' entry.
+    roleinfo = tuf.roledb.get_roleinfo(self._rolename)
+    for relative_target, permissions_target in zip(relative_list_of_targets, permissions_list_of_targets):
+      if relative_target not in roleinfo['paths']:
+        roleinfo['paths'].update({relative_target: {'file_permissions': permissions_target}})
+      else:
+        continue
+    _remove_list = []
+    for _file in roleinfo['paths']:
+      if not os.path.isfile(self._targets_directory + _file):
+        _remove_list.append(_file)
+    for _file in _remove_list:
+      del roleinfo['paths'][_file]
+
+    tuf.roledb.update_roleinfo(self.rolename, roleinfo)
 
 
   def get_delegated_rolenames(self):
