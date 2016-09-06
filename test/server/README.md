@@ -1,16 +1,21 @@
 # Server test
+## first time to init repository
 ### 1.Create a repository
 ```
-python 1generate.py -k
+./1create_repository.py
 ```
-### 2.Update repository
-If you had update your code file in repository/targets/ folder, you have to update:
+### 2.copy your application files
+copy your application files to reprository/targets folder
+### 3.Update repository
 ```
-python 2updatefiles.py
+./2updatefiles.py
 ```
-### 3.Release
-After update, you have to do a copy:
+### 3.release to online update.
 ```
-./3release.sh
+./3release_ol_update
+```
+### 4.Release to full update.
+```
+./4release_full_update.py
 ```
 

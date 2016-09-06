@@ -8,7 +8,7 @@ import tuf.client.updater
 # The only other module the client interacts with is 'tuf.conf'.  The
 # client accesses this module solely to set the repository directory.
 # This directory will hold the files downloaded from a remote repository.
-tuf.conf.repository_directory = 'local_repository'
+tuf.conf.repository_directory = '.'
 
 # Next, the client creates a dictionary object containing the repository
 # mirrors.  The client may download content from any one of these mirrors.
@@ -53,6 +53,7 @@ updated_targets = updater.updated_targets(targets, destination_directory)
 # Lastly, attempt to download each target among those that have changed.
 # The updated target files are saved locally to 'destination_directory'.
 for target in updated_targets:
+  print target
   updater.download_target(target, destination_directory)
 
 # Remove any files from the destination directory that are no longer being

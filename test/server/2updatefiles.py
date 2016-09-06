@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from tuf.repository_tool import *
 import os
 
