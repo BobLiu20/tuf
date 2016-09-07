@@ -80,7 +80,7 @@ with open('README.rst') as file_object:
 
 setup(
   name = 'tuf',
-  version = '0.10.1',
+  version = '0.10.2',
   description = 'A secure updater framework for Python',
   long_description = long_description,
   author = 'https://www.updateframework.com',
@@ -109,7 +109,7 @@ setup(
     'Topic :: Software Development'
   ],
   install_requires = ['iso8601', 'six'],
-  packages = find_packages(exclude=['tests']),
+  packages = find_packages(exclude=['test']),
   extras_require = extras,
   scripts = [
     'tuf/scripts/basic_client.py',

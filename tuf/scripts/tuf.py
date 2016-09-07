@@ -116,12 +116,13 @@ def update_repository(repository_path, command, command_arguments):
     try: 
       if command_arguments['keytype'] == 'ed25519':
         repository.root.load_signing_key
-    
+    except Exception, e:
+      pass
     # Write the changes to the staged repository directory.
     repository.write(consistent_snapshot=command_arguments['consistent_snapshot'])
 
 
-  elif command = 'gen-key':
+  elif command == 'gen-key':
     command_arguments 
 
 
