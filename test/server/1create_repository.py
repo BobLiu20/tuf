@@ -26,9 +26,14 @@
 import shutil
 import datetime
 import stat
+import os
 
 from tuf.repository_tool import *
 import tuf.util
+
+if os.path.isdir('repository'):
+    print 'the repository already exist.'
+    exit()
 
 repository = create_new_repository('repository')
 
