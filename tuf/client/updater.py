@@ -3161,3 +3161,6 @@ class Updater(object):
         os.system('chmod %s %s'%(trusted_permissions, destination))
     except Exception, e:
       pass
+
+  def _get_downloading_info(self):
+    return tuf.download._get_downloading_info()

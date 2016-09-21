@@ -54,7 +54,12 @@ except ImportError: # pragma: no cover
 # See 'log.py' to learn how logging is handled in TUF.
 logger = logging.getLogger('tuf.download')
 
-
+# Downlaod speed
+downloading_info = {
+  'speed': 0.0,
+  'total_size': 0,
+  'done_size': 0,
+}
 
 def safe_download(url, required_length):
   """
@@ -315,6 +320,8 @@ def _download_fixed_amount_of_data(connection, temp_file, required_length):
   
   start_time = timeit.default_timer()
 
+  downloading_info['total_size'] = required_length
+
   try:
     while True:
       # We download a fixed chunk of data in every round. This is so that we
@@ -350,7 +357,9 @@ def _download_fixed_amount_of_data(connection, temp_file, required_length):
       
       # Measure the average download speed.
       average_download_speed = number_of_bytes_received / seconds_spent_receiving
-  
+      downloading_info['done_size'] = number_of_bytes_received
+      downloading_info['speed'] = average_download_speed
+
       # If the average download speed is below a certain threshold, we flag
       # this as a possible slow-retrieval attack.
       if average_download_speed < tuf.conf.MIN_AVERAGE_DOWNLOAD_SPEED:
@@ -381,8 +390,8 @@ def _download_fixed_amount_of_data(connection, temp_file, required_length):
     # Whatever happens, make sure that we always close the connection.
     connection.close()
 
-
-
+def _get_downloading_info():
+  return downloading_info
 
 
 def _get_request(url):
