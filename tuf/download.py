@@ -329,7 +329,7 @@ def _download_fixed_amount_of_data(connection, temp_file, required_length):
       # to download an extremely large file in one shot.  Before beginning the
       # round, sleep for a short amount of time so that the CPU is not hogged
       # in the while loop.
-      time.sleep(0.05)
+      time.sleep(0.000001)
       data = b'' 
       read_amount = min(tuf.conf.CHUNK_SIZE,
                         required_length - number_of_bytes_received)
